@@ -1,0 +1,8 @@
+gym
+gym[accept-rom-license]
+gym[atari]
+torch
+pygame
+matplotlib
+pytest
+moviepy 
