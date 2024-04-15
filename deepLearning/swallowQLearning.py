@@ -5,6 +5,7 @@ import torch # type: ignore
 from libs.Perseptron import SimplePerceptron # type: ignore
 from utils.decay_schedule import LinearDecaySchedule
 import random 
+from utils.experienceMemory import ExpirenceMemory, Experiences
 
 # Configuraciones iniciales
 MAX_NUM_EPISODES = 10000 # Número máximo de episodios
@@ -24,7 +25,9 @@ class SwallowQLearning(object):
                                                     finalValue = self.epsilon_min, 
                                                     max_steps = epsilon_decay * MAX_NUM_EPISODES * STEPS_PER_EPISODE)
         self.step_num = 0
-        self.policy = self.epsilon_greedy_Q    
+        self.policy = self.epsilon_greedy_Q   
+        self.memory = ExpirenceMemory( capacity = int(1e6) ) 
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def get_action(self, obs):
         """Obtención de la acción del agente"""
@@ -43,6 +46,36 @@ class SwallowQLearning(object):
         self.Q_optimize.zero_grad()
         td_error.backward()
         self.Q_optimize.step()
+
+    def ReplaySave(self, batchSize):
+        """
+        Esta funcion se encarga de cargar y jugar con una muestra de experiencias
+        @param batchSize: int: Tamaño de la muestra
+        """
+        experience = self.memory.sample(batchSize)
+        self.learnFromExperience(experience)
+
+    def learnFromExperience(self, experiences):
+        """
+        Esta función se encarga de aprender de una experiencia
+        @param experiences: list: Experiencia a aprender
+        """
+        batchXP = Experiences(*zip(*experiences))
+        obsBatch = np.array(batchXP.obs)
+        actionBatch = np.array(batchXP.action)
+        rewardBatch = np.array(batchXP.reward)
+        nextObsBatch = np.array(batchXP.nextObs)
+        doneBatch = np.array(batchXP.done)
+        td_target = rewardBatch + ~ doneBatch *\
+                    np.tile(self.gamma, len(nextObsBatch)) *\
+                    self.Q(nextObsBatch).detach().max(1)[0].data
+        td_target = td_target.to(self.device)
+        action_idx = torch.from_numpy(actionBatch).to(self.device)
+        td_Error = torch.nn.functional.mse_loss(self.Q(obsBatch).gather(1, action_idx.view(-1, 1)), td_target.float().unsqueeze(1))
+        self.Q_optimize.zero_grad()
+        td_Error.mean().backward()
+        self.Q_optimize.step()
+                     
 
 if __name__ == "__main__":
     env = gym.make("CartPole-v1")
