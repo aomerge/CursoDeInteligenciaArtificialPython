@@ -3,12 +3,12 @@ from gym.wrappers import RecordVideo
 import numpy as np
 import matplotlib.pyplot as plt
 
-#formula de faiman
+#formula de Bellman
 #Q(s,a) = Q(s,a) + alpha * (R + gamma * max(Q(s',a')) - Q(s,a))
 
 # Configuraciones iniciales
 MAX_NUM_EPISODES = 1000 # Número máximo de episodios
-STEPS_PER_EPISODE = 100 # Número de pasos por episodio
+STEPS_PER_EPISODE = 300 # Número de pasos por episodio
 EPSILON_MIN = 0.05 # Epsilon mínimo
 max_num_steps = MAX_NUM_EPISODES * STEPS_PER_EPISODE # Número máximo de pasos
 EPSILON_DECAY = 500 * EPSILON_MIN / max_num_steps # Decremento de epsilon
