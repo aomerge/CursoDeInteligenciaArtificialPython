@@ -1,7 +1,7 @@
-import collections import namedtuple # type: ignore
+from collections import namedtuple
 import random
 
-Experiences = namedtuple('Experience', field_names=['state', 'action', 'reward', 'done', 'new_state'])   
+Experiences = namedtuple('Experiences', ['obs', 'action', 'reward', 'new_state', 'done'])   
 
 class ExpirenceMemory(object):
     """
@@ -29,12 +29,12 @@ class ExpirenceMemory(object):
         @param batch_size: int: Tamaño de la muestra
         @return list: Muestra de experiencias
         """
-        assert self.canProvideSample(batch_size)
+        assert batch_size <= self.getSize()
         return random.sample(self.memory, batch_size)
 
-    def canProvideSample(self, batch_size):
+    def getSize(self):
         """
         @param batch_size: int: Tamaño de la muestra
         @return bool: True si el tamaño de la muestra es menor o igual al tamaño de la memoria
         """
-        return batch_size <= len(self.memory)
+        return len(self.memory)
