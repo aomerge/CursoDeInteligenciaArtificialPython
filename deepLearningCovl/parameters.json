@@ -1,0 +1,94 @@
+{
+  "agent": {
+    "maxNumEpisode": 1000,
+    "stepsPerEpisode": 300,
+    "experienceMemory": 1e5,
+    "replayStart": 10000,
+    "replayBatchSize": 32,
+    "useTargetNetwork": true,
+    "targetNetworkUpdateFreq": 2000,
+    "learningRate": 5e-3,
+    "gamma": 0.98,
+    "epsilonMax": 1.0,
+    "epsilonMin": 0.05,
+    "epsilonDecay": 100000,
+    "seed": 2024,
+    "useCuda": true,
+    "sumaryFilenamePrefix": "logs/summary",
+    "loadTrainedModel": true,
+    "saveDir": "trainer_Models/",
+    "loaDir": "trainer_Models/",
+    "saveFreq": 50
+  },
+  "enviroment": {
+    "type": "Atari",
+    "episodicLife": true,
+    "clipReward": true,
+    "skipRate": 4,
+    "frameStack": 4,
+    "render": false,
+    "normalizeObservation": true,
+    "usefulRegion": {
+      "Default": {
+        "crop1": 34,
+        "crop2": 34,
+        "dimension2": 80
+      },
+      "Asteroids": {
+        "crop1": 16,
+        "crop2": 35,
+        "dimension2": 94
+      },
+      "BeamRider": {
+        "crop1": 20,
+        "crop2": 20,
+        "dimension2": 80
+      },
+      "Boxing": {
+        "crop1": 30,
+        "crop2": 30,
+        "dimension2": 80
+      },
+      "Breakout": {
+        "crop1": 34,
+        "crop2": 34,
+        "dimension2": 80
+      },
+      "Centipede": {
+        "crop1": 36,
+        "crop2": 56,
+        "dimension2": 90
+      },
+      "MsPacman": {
+        "crop1": 2,
+        "crop2": 10,
+        "dimension2": 84
+      },
+      "Qbert": {
+        "crop1": 12,
+        "crop2": 40,
+        "dimension2": 94
+      },
+      "Pong": {
+        "crop1": 34,
+        "crop2": 34,
+        "dimension2": 80
+      },
+      "Seaquest": {
+        "crop1": 30,
+        "crop2": 30,
+        "dimension2": 80
+      },
+      "SpaceInvaders": {
+        "crop1": 8,
+        "crop2": 36,
+        "dimension2": 94
+      },
+      "VideoPinball": {
+        "crop1": 42,
+        "crop2": 60,
+        "dimension2": 89
+      }
+    }
+  }
+}

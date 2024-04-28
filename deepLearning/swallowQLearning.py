@@ -12,6 +12,16 @@ MAX_NUM_EPISODES = 10000 # Número máximo de episodios
 STEPS_PER_EPISODE = 100 # Número de pasos por episodio
 
 class SwallowQLearning(object):
+    """
+    Clase que implementa el algoritmo Q-Learning
+    
+    @param env: gym.Env: Entorno de OpenAI
+    @param learning_rate: float: Tasa de aprendizaje
+    @param gamma: float: Factor de descuento
+    @param epsilon: float: Probabilidad de exploración
+    @param epsilon_min: float: Probabilidad mínima de exploración
+    @param epsilon_decay: float: Decaimiento de la probabilidad de exploración
+    """
     def __init__(self, env, learning_rate = 0.01, gamma = 0.99, epsilon = 1.0, epsilon_min = 0.05, epsilon_decay = 0.5):
         self.obs_shape = env.observation_space.shape
         self.action_shape = env.action_space.n
@@ -98,7 +108,7 @@ class SwallowQLearning(object):
         """
         batchXP = Experiences(*zip(*experiences))        
         # Convertir las observaciones a tensores y enviarlas al dispositivo
-        
+
         obsBatch = self.validate_and_transform_observations(batchXP.obs)
         #obsBatch = torch.tensor(batchXP.obs[0], dtype=torch.float32).to(self.device)
         actionBatch = torch.tensor(batchXP.action, dtype=torch.long).to(self.device)  # Asegúrate de que es long para indexing
